@@ -21,6 +21,9 @@ pipeline {
     NEXUS_LOGIN = 'nexuslogin'
     SONARSERVER = 'sonarserver'
     SONARSCANNER = 'sonarscanner'
+    registry = "20216627/vprofile"
+    registryCredential = 'dockerhubcreds'
+    dockerImage = ''
     }
 
     stages {
@@ -92,6 +95,27 @@ pipeline {
                 )
             }
         }
+   
+   stage("Build App Image") {
+            steps {
+                script {
+                    dockerImage = docker.build( registry + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
+                }
+                }
+            }
+        }
+   stage('Upload App Image to ECR') {
+          steps{
+            script {
+              docker.withRegistry( '', registryCredential ) {
+                dockerImage.push("$BUILD_NUMBER")
+                dockerImage.push('latest')
+              }
+            }
+          }
+        }
+   
+   
     }
     post {
         always {
@@ -102,3 +126,4 @@ pipeline {
         }
     }
 }
+
