@@ -103,7 +103,7 @@ pipeline {
                 }
                 }
             }
-        }
+        
    stage('Upload App Image to ECR') {
           steps{
             script {
@@ -115,8 +115,6 @@ pipeline {
           }
         }
    
-   
-    }
     
     }
     post {
