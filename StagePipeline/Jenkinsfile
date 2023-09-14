@@ -17,8 +17,9 @@ pipeline {
     NEXUS_LOGIN = 'nexuslogin'
     SONARSERVER = 'sonarserver'
     SONARSCANNER = 'sonarscanner'
-    imagename = "docker.io/20216627/vprofile"
-    deckerHubCredential = '20216627'
+    imagetag_dockerhub = "docker.io/20216627/vprofile"
+    imagetag_nexus = "172.31.49.126:8081/vprofile"
+    dockerHubCredential = '20216627'
     dockerImage = ''
     }
 
@@ -27,7 +28,7 @@ pipeline {
     stage("Build App Image") {
                 steps {
                     script {
-                        dockerImage = docker.build( imagename + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
+                        dockerImage = docker.build( imagetag_nexus + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
                     }
                     }
                 }
@@ -35,22 +36,13 @@ pipeline {
     stage('Upload App Image to DockerHub') {
             steps{
                 script {
-                docker.withRegistry( '', deckerHubCredential ) {
+                docker.withRegistry( '', NEXUS_LOGIN ) {
                     dockerImage.push("$BUILD_NUMBER")
                 }
                 }
             }
             }
 
-    stage('Upload App Image to Nexus') {
-            steps{
-                script {
-                docker.withRegistry( '', deckerHubCredential ) {
-                    dockerImage.push("$BUILD_NUMBER")
-                }
-                }
-            }
-            }
 
     }
 }
