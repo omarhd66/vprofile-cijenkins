@@ -28,7 +28,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'PSW', usernameVariable: 'USER')]){
                     sh "echo ${PSW} | docker login -u ${USER} --password-stdin 172.31.62.128:8082"
                     }
-                docker.withRegistry( '', nexusCredential ) {
+                docker.withRegistry( '', nexus ) {
                     dockerImage.push("$BUILD_NUMBER")
                 }
                 }
