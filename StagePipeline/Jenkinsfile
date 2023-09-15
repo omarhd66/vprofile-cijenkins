@@ -31,14 +31,6 @@ pipeline {
                     script {
                 echo 'Building Image ...'
                 sh "docker tag nginx:latest 172.31.62.128:8082/umer:${BUILD_NUMBER} "
-
-                echo 'Pushing image to docker hosted rerpository on Nexus'
-
-                withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'PSW', usernameVariable: 'USER')]){
-                    sh "echo ${PSW} | docker login -u ${USER} --password-stdin 172.31.62.128:8082"
-                    sh "docker push 172.31.62.128:8082/umer:${BUILD_NUMBER}"
-                    }
-
                     }
                 }
     }
@@ -46,7 +38,12 @@ pipeline {
     stage('Upload App Image to DockerHub') {
             steps{
                 script {
-                echo 'Next time Upload App Image to DockerHub ...'
+                echo 'Pushing image to docker hosted rerpository on Nexus'
+
+                withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'PSW', usernameVariable: 'USER')]){
+                    sh "echo ${PSW} | docker login -u ${USER} --password-stdin 172.31.62.128:8082"
+                    sh "docker push 172.31.62.128:8082/umer:${BUILD_NUMBER}"
+                    }
                 }
                 }
             }
