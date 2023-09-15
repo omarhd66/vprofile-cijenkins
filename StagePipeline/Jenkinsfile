@@ -8,6 +8,7 @@ pipeline {
     environment {
         imagename = "172.31.62.128:8082/vprofile"
         nexusCredential = 'nexus'
+        nexusUrl = 'http://172.31.62.128:8082/'
     }
     
     stages {
@@ -25,7 +26,7 @@ pipeline {
                 script {
                 echo 'Pushing image to docker hosted rerpository on Nexus'
 
-                docker.withRegistry( 'http://172.31.62.128:8082/', nexusCredential ) {
+                docker.withRegistry( nexusUrl , nexusCredential ) {
                     dockerImage.push("$BUILD_NUMBER")
                 }
                 }
