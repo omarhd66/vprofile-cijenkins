@@ -5,25 +5,6 @@ pipeline {
         jdk "OracleJDK8"
     }
     
-    environment {
-        SNAP_REPO = 'vprofile-snapshot'
-	NEXUS_USER = 'admin'
-	NEXUS_PASS = 'umer123@'
-	RELEASE_REPO = 'dockerhost'
-	CENTRAL_REPO = 'dockerproxy'
-	NEXUSIP = '172.31.49.126'
-	NEXUSPORT = '8081'
-	NEXUS_GRP_REPO = 'dockergroup'
-    NEXUS_LOGIN = 'admin'
-    SONARSERVER = 'sonarserver'
-    SONARSCANNER = 'sonarscanner'
-    imagetag_dockerhub = "docker.io/20216627/vprofile"
-    imagetag_nexus = "172.31.49.126:8081/vprofile"
-    dockerHubCredential = '20216627'
-    dockerImage = ''
-
-    }
-
     stages {
 
     stage("Build App Image") {
@@ -35,7 +16,7 @@ pipeline {
                 }
     }
  
-    stage('Upload App Image to DockerHub') {
+    stage('Upload App Image to Nexus') {
             steps{
                 script {
                 echo 'Pushing image to docker hosted rerpository on Nexus'
@@ -48,7 +29,4 @@ pipeline {
                 }
             }
             }
-
-
-    
 }
