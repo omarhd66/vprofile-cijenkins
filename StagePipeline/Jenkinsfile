@@ -25,7 +25,7 @@ pipeline {
                 script {
                 echo 'Pushing image to docker hosted rerpository on Nexus'
 
-                docker.withRegistry( '172.31.62.128:8082', nexus ) {
+                docker.withRegistry( '172.31.62.128:8082', nexusCredential ) {
                     dockerImage.push("$BUILD_NUMBER")
                 }
                 }
