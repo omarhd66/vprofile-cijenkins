@@ -14,13 +14,14 @@ pipeline {
 	NEXUSIP = '172.31.49.126'
 	NEXUSPORT = '8081'
 	NEXUS_GRP_REPO = 'dockergroup'
-    NEXUS_LOGIN = 'nexuslogin'
+    NEXUS_LOGIN = 'admin'
     SONARSERVER = 'sonarserver'
     SONARSCANNER = 'sonarscanner'
     imagetag_dockerhub = "docker.io/20216627/vprofile"
     imagetag_nexus = "172.31.49.126:8081/vprofile"
     dockerHubCredential = '20216627'
     dockerImage = ''
+
     }
 
     stages {
@@ -28,16 +29,23 @@ pipeline {
     stage("Build App Image") {
                 steps {
                     script {
-                        dockerImage = docker.build( imagetag_nexus + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
+                echo 'Building Image ...'
+                sh "docker tag nginx:latest 172.31.62.128:8082/umer:${BUILD_NUMBER} ."
+
+                echo 'Pushing image to docker hosted rerpository on Nexus'
+
+                withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'PSW', usernameVariable: 'USER')]){
+                    sh "echo ${PSW} | docker login -u ${USER} --password-stdin 172.31.62.128:8082"
+                    sh "docker push 172.31.62.128:8082/umer:${BUILD_NUMBER}"
                     }
+
                     }
                 }
  
     stage('Upload App Image to DockerHub') {
             steps{
                 script {
-                docker.withRegistry( '', NEXUS_LOGIN ) {
-                    dockerImage.push("$BUILD_NUMBER")
+                echo 'Next time Upload App Image to DockerHub ...'
                 }
                 }
             }
