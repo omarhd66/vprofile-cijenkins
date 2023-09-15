@@ -30,7 +30,7 @@ pipeline {
                 steps {
                     script {
                 echo 'Building Image ...'
-                sh "docker tag nginx:latest 172.31.62.128:8082/umer:${BUILD_NUMBER} ."
+                sh "docker tag nginx:latest 172.31.62.128:8082/umer:${BUILD_NUMBER} "
 
                 echo 'Pushing image to docker hosted rerpository on Nexus'
 
