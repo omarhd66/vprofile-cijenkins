@@ -41,6 +41,7 @@ pipeline {
 
                     }
                 }
+    }
  
     stage('Upload App Image to DockerHub') {
             steps{
@@ -52,5 +53,5 @@ pipeline {
             }
 
 
-    }
+    
 }
