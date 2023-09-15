@@ -4,14 +4,19 @@ pipeline {
         maven "maven3"
         jdk "OracleJDK8"
     }
+
+    environment {
+        imagename = "172.31.62.128:8082/vprofile"
+        dockerHubCredential = '20216627'
+        dockerImage = ''
+    }
     
     stages {
 
     stage("Build App Image") {
                 steps {
                     script {
-                echo 'Building Image ...'
-                sh "docker tag nginx:latest 172.31.62.128:8082/umer:${BUILD_NUMBER} "
+                dockerImage = docker.build( imagename + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
                     }
                 }
     }
