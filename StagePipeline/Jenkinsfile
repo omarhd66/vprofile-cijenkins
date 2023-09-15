@@ -7,6 +7,7 @@ pipeline {
 
     environment {
         imagename = "172.31.62.128:8082/vprofile"
+        nexusCredential = "nexus"
     }
     
     stages {
@@ -26,8 +27,10 @@ pipeline {
 
                 withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'PSW', usernameVariable: 'USER')]){
                     sh "echo ${PSW} | docker login -u ${USER} --password-stdin 172.31.62.128:8082"
-                    sh "docker push ${imagename}:${BUILD_NUMBER}"
                     }
+                docker.withRegistry( '', nexusCredential ) {
+                    dockerImage.push("$BUILD_NUMBER")
+                }
                 }
                 }
             }
